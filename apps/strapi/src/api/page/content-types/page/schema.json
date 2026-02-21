@@ -72,7 +72,9 @@
         "forms.contact-form",
         "utilities.ck-editor-content",
         "utilities.ck-editor-text",
-        "utilities.tip-tap-rich-text"
+        "utilities.tip-tap-rich-text",
+        "sections.grid-tile",
+        "sections.grid-tile-collection"
       ]
     },
     "children": {

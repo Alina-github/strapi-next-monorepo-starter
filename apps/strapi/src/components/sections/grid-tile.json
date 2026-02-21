@@ -1,0 +1,33 @@
+{
+  "collectionName": "components_sections_grid_tiles",
+  "info": {
+    "displayName": "GridTile",
+    "icon": "apps"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "Link": {
+      "type": "string"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "isFeatured": {
+      "type": "boolean"
+    }
+  },
+  "config": {}
+}
