@@ -602,6 +602,9 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
         "utilities.ck-editor-content",
         "utilities.ck-editor-text",
         "utilities.tip-tap-rich-text",
+        "sections.grid-tile",
+        "sections.grid-tile-collection",
+        "utilities.image-with-link",
       ]
     > &
       Schema.Attribute.SetPluginOptions<{

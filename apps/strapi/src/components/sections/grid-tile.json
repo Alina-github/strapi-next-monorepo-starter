@@ -12,8 +12,10 @@
     "description": {
       "type": "text"
     },
-    "Link": {
-      "type": "string"
+    "link": {
+      "type": "component",
+      "component": "utilities.link",
+      "repeatable": false
     },
     "image": {
       "type": "media",

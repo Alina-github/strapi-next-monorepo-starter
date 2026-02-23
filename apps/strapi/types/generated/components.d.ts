@@ -73,6 +73,34 @@ export interface SectionsFaq extends Struct.ComponentSchema {
   }
 }
 
+export interface SectionsGridTile extends Struct.ComponentSchema {
+  collectionName: "components_sections_grid_tiles"
+  info: {
+    displayName: "GridTile"
+    icon: "apps"
+  }
+  attributes: {
+    description: Schema.Attribute.Text
+    image: Schema.Attribute.Media<"images" | "files" | "videos" | "audios">
+    isFeatured: Schema.Attribute.Boolean
+    link: Schema.Attribute.Component<"utilities.link", false>
+    title: Schema.Attribute.String
+  }
+}
+
+export interface SectionsGridTileCollection extends Struct.ComponentSchema {
+  collectionName: "components_sections_grid_tile_collections"
+  info: {
+    displayName: "GridTileCollection"
+    icon: "apps"
+  }
+  attributes: {
+    description: Schema.Attribute.Text
+    tiles: Schema.Attribute.Component<"sections.grid-tile", true>
+    title: Schema.Attribute.String
+  }
+}
+
 export interface SectionsHeadingWithCtaButton extends Struct.ComponentSchema {
   collectionName: "components_sections_heading_with_cta_buttons"
   info: {
@@ -382,6 +410,8 @@ declare module "@strapi/strapi" {
       "sections.animated-logo-row": SectionsAnimatedLogoRow
       "sections.carousel": SectionsCarousel
       "sections.faq": SectionsFaq
+      "sections.grid-tile": SectionsGridTile
+      "sections.grid-tile-collection": SectionsGridTileCollection
       "sections.heading-with-cta-button": SectionsHeadingWithCtaButton
       "sections.hero": SectionsHero
       "sections.horizontal-images": SectionsHorizontalImages

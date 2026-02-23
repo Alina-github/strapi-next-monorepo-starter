@@ -14,6 +14,7 @@ export function StrapiGridTileCollection({
   if (!component.tiles || component.tiles.length === 0) {
     return null
   }
+  console.log({ tiles: component.tiles })
 
   return (
     <section>
@@ -69,9 +70,16 @@ export function StrapiGridTileCollection({
               </div>
             )
 
-            if (tile.Link) {
+            const linkHref =
+              tile.link?.type === "external"
+                ? tile.link.href
+                : tile.link?.type === "page"
+                  ? tile.link.page?.fullPath
+                  : undefined
+
+            if (linkHref) {
               return (
-                <Link key={tile.id} href={tile.Link} className="no-underline">
+                <Link key={tile.id} href={linkHref} className="no-underline">
                   {card}
                 </Link>
               )
