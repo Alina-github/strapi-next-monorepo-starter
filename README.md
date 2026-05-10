@@ -4,6 +4,8 @@ A content-driven comparison and review platform for real estate investment compa
 
 > Think Booking.com, but for property investment companies — helping users find and compare investment platforms, while earning affiliate commissions on referrals.
 
+<img width="1713" height="869" alt="Screenshot 2026-05-09 at 18 00 16" src="https://github.com/user-attachments/assets/185df831-e324-4511-a489-a73202bf7bee" />
+
 ---
 
 ## Tech Stack
