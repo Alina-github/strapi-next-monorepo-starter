@@ -240,40 +240,6 @@ The API client (called directly or through proxy) automatically injects either t
 
 With the read-only token, it's possible to fetch data from any Strapi content type (assuming the endpoint name can be guessed). To improve security and prevent unrestricted data access, an additional layer — `ALLOWED_STRAPI_ENDPOINTS` — is used. This list defines the specific Strapi endpoints that are allowed to be accessed. Keep it **up to date** with the content types you want to expose.
 
-#### Private API
-
-Applications with authentication pages (e.g. `/auth/signin`, `/auth/register`) require the [Strapi Users & Permissions plugin](https://docs.strapi.io/cms/features/users-permissions) to be enabled. This is enabled by default. The [PrivateStrapiClient](src/lib/strapi-api/private.ts) class is used for making private API requests — user JWT tokens are automatically injected on both the server and client sides, and it returns data related to the logged-in user.
-
-It works similarly to the public API client - for requests coming from the **server context**, you should use the client instance without setting `useProxy` option in `CustomFetchOptions` (by default). In this case the Strapi is called directly. For requests coming from the **client context**, you must set `useProxy: true` in the `CustomFetchOptions`. In this case the client uses [route handler](src/app/api/private-proxy/[...slug]/route.ts) as a private proxy. This proxy hides the Strapi backend URL, preventing users from accessing it directly.
-
-The frontend app uses the `better-auth` package, which is configured in [src/lib/auth.ts](src/lib/auth.ts) and [src/app/api/auth/[...all]/route.ts](src/app/api/auth/[...all]/route.ts) to manage user sessions.
-
-In the [middleware.ts](src/middleware.ts) file, the `authMiddleware` is used to check whether the user is authenticated. A list called `authPages` contains the routes that require authentication. If a user is not authenticated and tries to access a private route, they are redirected to the login page.
-
-To retrieve the session (logged-in user) in server components, use `getSessionSSR()` function that returns typed session data:
-
-```tsx
-import { headers } from "next/headers"
-
-import { getSessionSSR } from "@/lib/auth"
-
-const session = await getSessionSSR(await headers())
-```
-
-To get session in client components use `useSession()` (reactive) or `getSession()`:
-
-```tsx
-import { authClient } from "@/lib/client"
-
-// in client component/hook
-const { data: session } = authClient.useSession()
-
-// or imperatively
-const { data: session } = await authClient.getSession()
-```
-
-To omit the `Authorization` header and skip token detection, you can pass `omitUserAuthorization: true` in the `options` object of the `fetchAPI` function. Token detection is a dynamic operation, which prevents static rendering of the page.
-
 #### Fetch functions
 
 The [BaseStrapiClient](src/lib/strapi-api/base.ts) class contains functions that wrap the native `fetch()` method, with pre-configured base path, token management, headers, and query parameter handling. It provides the following functions: `fetchAPI`, `fetchOne`, `fetchMany`, `fetchAll`, `fetchOneBySlug`, and `fetchOneByFullPath`.
@@ -281,20 +247,6 @@ The [BaseStrapiClient](src/lib/strapi-api/base.ts) class contains functions that
 - `fetchAPI` – the most general-purpose function for making API requests (`GET`, `POST`, `PUT`, `DELETE`). It can be used in any scenario, but the return type must be manually specified. This function is especially useful when:
   - Fetching data from or sending data to a custom Strapi endpoint (e.g. `GET /users/my-logic-endpoint`)
   - The data is not associated with any Strapi content type
-  - The endpoint is already used by another handler (e.g. the content type `"plugin::users-permissions.user"` is reserved for `GET /users`, so `GET /users/me` must use `fetchAPI` instead — see below):
-
-```ts
-import { Result } from "@repo/strapi-types"
-
-const fetchedUser: Result = await Strapi.PrivateStrapiClient(
-  "/users/me",
-  undefined,
-  undefined,
-  {
-    userJWT: token.strapiJWT,
-  }
-)
-```
 
 - other fetch functions – these are directly tied to Strapi content types. When calling them, you must specify the UUID (e.g. `"api::"`, `"admin::"`) of the `ContentType` you want to fetch. Based on this UUID, the response type is automatically inferred. Read the [@repo/strapi-types documentation](../../packages/strapi-types/README.md#troubleshooting) for more details on how type inference works.
   **To make this work**, you need to maintain a mapping between the `ContentType` UUID and the corresponding endpoint URL path—refer to the `API_ENDPOINTS` object in the [BaseStrapiClient](src/lib/strapi-api/base.ts) file. Also, Strapi **must have** [types generation](https://docs.strapi.io/cms/configurations/typescript#strapi-specific-configuration-for-typescript) enabled (true by default).
@@ -678,7 +630,7 @@ Log example:
 
 ```plaintext
 {
-  message: "Error fetching navbar for locale 'cs'",
+  message: "Error fetching navbar for locale 'pt'",
   error: {
     error: '{"name":"NotFoundError","message":"Not Found","details":{},"status":404}',
     stack: 'Error: {"name":"NotFoundError","message":"Not Found","details":{},"status":404}\n' +

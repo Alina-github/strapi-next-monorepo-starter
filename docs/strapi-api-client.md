@@ -1,6 +1,6 @@
 # Strapi API Client
 
-The Strapi API client provides a type-safe interface for fetching content from Strapi CMS. It implements a dual-client pattern with proxy routes for security.
+The Strapi API client provides a type-safe interface for fetching content from Strapi CMS. It uses a proxy route for security on the client side.
 
 ## Architecture
 
@@ -11,12 +11,10 @@ The Strapi API client provides a type-safe interface for fetching content from S
 │  Server Components                     Client Components                    │
 │  ┌─────────────────────┐               ┌─────────────────────┐              │
 │  │ PublicStrapiClient  │               │ PublicStrapiClient  │              │
-│  │ PrivateStrapiClient │               │ (useProxy: true)    │              │
-│  └──────────┬──────────┘               └──────────┬──────────┘              │
-│             │ direct                              │                         │
+│  └──────────┬──────────┘               │ (useProxy: true)    │              │
+│             │ direct                   └──────────┬──────────┘              │
 │             │                          ┌──────────▼──────────┐              │
 │             │                          │  /api/public-proxy  │              │
-│             │                          │  /api/private-proxy │              │
 │             │                          └──────────┬──────────┘              │
 └─────────────┼─────────────────────────────────────┼─────────────────────────┘
               │                                     │
@@ -53,29 +51,19 @@ For read operations using API key authentication.
 - Uses `STRAPI_REST_CUSTOM_API_KEY` for write operations
 - Supports proxy mode for client-side requests
 
-### PrivateClient
+## Client Instance
 
-For authenticated operations using user JWT tokens.
-
-**`apps/ui/src/lib/strapi-api/private.ts`**
-
-- Retrieves user JWT from Better Auth session
-- Supports direct JWT injection via `userJWT` option
-- Required for user-specific data and protected endpoints
-
-## Client Instances
-
-Pre-instantiated clients are exported from `apps/ui/src/lib/strapi-api/index.ts`:
+Pre-instantiated client is exported from `apps/ui/src/lib/strapi-api/index.ts`:
 
 ```typescript
-import { PrivateStrapiClient, PublicStrapiClient } from "@/lib/strapi-api"
+import { PublicStrapiClient } from "@/lib/strapi-api"
 ```
 
 ## Authentication Flow
 
 **`apps/ui/src/lib/strapi-api/request-auth.ts`**
 
-### API Key Authentication (Public)
+### API Key Authentication
 
 ```typescript
 // Read-only operations (GET, HEAD)
@@ -85,33 +73,20 @@ STRAPI_REST_READONLY_API_KEY
 STRAPI_REST_CUSTOM_API_KEY
 ```
 
-### User JWT Authentication (Private)
-
-```typescript
-// Server-side: reads from cookies via getSessionSSR()
-const session = await getSessionSSR(await headers())
-const jwt = session?.user?.strapiJWT
-
-// Client-side: fetches from /api/auth/session
-const { data: session } = await getSessionCSR()
-const jwt = session?.user?.strapiJWT
-```
-
 ### createStrapiAuthHeader()
 
-Utility that automatically selects the correct auth strategy:
+Utility that selects the correct API key:
 
 ```typescript
 const authHeader = await createStrapiAuthHeader({
   isReadOnly: true, // use readonly API key
-  isPrivate: false, // use API key (not user JWT)
 })
 // Returns: { Authorization: "Bearer <token>" }
 ```
 
-## Proxy Routes
+## Proxy Route
 
-Proxies hide sensitive information from the client.
+The proxy hides sensitive information from the client.
 
 ### /api/public-proxy
 
@@ -121,34 +96,14 @@ Proxies hide sensitive information from the client.
 - Injects API key into requests
 - Validates endpoints against allowlist
 
-### /api/private-proxy
-
-**`apps/ui/src/app/api/private-proxy/[...slug]/route.ts`**
-
-- Hides `STRAPI_URL` from client
-- Passes through user's Authorization header
-- Validates endpoints against allowlist
-
 ### Endpoint Allowlist
 
 **`request-auth.ts`**
 
 ```typescript
 const ALLOWED_STRAPI_ENDPOINTS: Record<string, string[]> = {
-  GET: [
-    "api/pages",
-    "api/footer",
-    "api/navbar",
-    "api/users/me",
-    "api/auth/local",
-  ],
-  POST: [
-    "api/subscribers",
-    "api/auth/local/register",
-    "api/auth/forgot-password",
-    "api/auth/reset-password",
-    "api/auth/change-password",
-  ],
+  GET: ["api/pages", "api/footer", "api/navbar"],
+  POST: ["api/subscribers"],
 }
 ```
 
@@ -254,12 +209,6 @@ interface CustomFetchOptions {
 
   // Skip adding locale to query params
   doNotAddLocaleQueryParams?: boolean
-
-  // Skip user authorization (PrivateClient only)
-  omitUserAuthorization?: boolean
-
-  // Provide JWT directly instead of fetching from session
-  userJWT?: string
 }
 ```
 
@@ -303,17 +252,6 @@ async function fetchData() {
   )
   return data
 }
-```
-
-### Authenticated Request
-
-```typescript
-import { PrivateStrapiClient } from "@/lib/strapi-api"
-
-// User JWT is automatically retrieved from Better Auth session
-const userData = await PrivateStrapiClient.fetchOne("api::user.user", userId, {
-  locale,
-})
 ```
 
 ## Adding New Endpoints

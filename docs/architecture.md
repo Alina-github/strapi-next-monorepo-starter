@@ -31,21 +31,15 @@ See [Page Builder](./page-builder.md) for details.
 
 ## Strapi API Clients
 
-Two client classes handle content fetching:
+`PublicStrapiClient` handles content fetching using API key authentication.
 
-| Client                | Auth     | Use Case                |
-| --------------------- | -------- | ----------------------- |
-| `PublicStrapiClient`  | API key  | Read-only content       |
-| `PrivateStrapiClient` | User JWT | Authenticated endpoints |
-
-Client-side requests use proxy routes (`/api/public-proxy`, `/api/private-proxy`) to hide Strapi URL.
+Client-side requests use a proxy route (`/api/public-proxy`) to hide the Strapi URL.
 
 See [Strapi API Client](./strapi-api-client.md) for details.
 
 ## Routing
 
 - Catch-all `[locale]/[[...rest]]` renders Strapi-managed pages
-- Auth pages under `[locale]/auth/`
 - Locale extracted from URL, passed to API queries
 
 ## Internationalization
@@ -56,11 +50,6 @@ Dual i18n system:
 | ----------- | ---------- | --------------------------- |
 | next-intl   | UI strings | `src/locales/{locale}.json` |
 | Strapi i18n | Content    | `locale` query parameter    |
-
-## Authentication
-
-- **Better Auth v1**: Session management (cookies)
-- **Strapi JWT**: Stored in session as `user.strapiJWT`, used for private API calls
 
 ## Environment Variables
 

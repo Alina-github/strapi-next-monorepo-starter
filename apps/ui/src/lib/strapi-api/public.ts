@@ -37,7 +37,6 @@ export class PublicClient extends BaseStrapiClient {
       const isReadOnly = ["GET", "HEAD"].includes(requestInit?.method ?? "GET")
       const authHeader = await createStrapiAuthHeader({
         isReadOnly,
-        isPrivate: false,
       })
 
       headers = {

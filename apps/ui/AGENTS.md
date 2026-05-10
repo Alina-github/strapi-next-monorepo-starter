@@ -35,13 +35,10 @@ Full workflow: [Page Builder docs](../../docs/page-builder.md)
 ## Strapi API Clients
 
 ```typescript
-import { PrivateStrapiClient, PublicStrapiClient } from "@/lib/strapi-api"
+import { PublicStrapiClient } from "@/lib/strapi-api"
 ```
 
-| Client                | Auth     | Use Case               |
-| --------------------- | -------- | ---------------------- |
-| `PublicStrapiClient`  | API key  | Read-only content      |
-| `PrivateStrapiClient` | User JWT | Authenticated requests |
+`PublicStrapiClient` handles content fetching using API key authentication.
 
 **Client-side:** Use `useProxy: true` option.
 
@@ -53,21 +50,6 @@ Full reference: [Strapi API Client docs](../../docs/strapi-api-client.md)
 | ----------- | ---------- | --------------------------------- |
 | next-intl   | UI strings | `locales/{locale}.json`           |
 | Strapi i18n | Content    | `locale` query param (auto-added) |
-
-## Authentication
-
-- **Better Auth v1**: Session management
-- **Strapi JWT**: Stored as `session.user.strapiJWT`
-
-```typescript
-// Server
-const session = await getSessionSSR(await headers())
-
-// Client
-const { data: session } = await getSessionCSR()
-```
-
-Full reference: [Authentication docs](../../docs/authentication.md)
 
 ## Adding Page Builder Components
 
@@ -82,5 +64,4 @@ Use skill: `/create-content-component`, or do it manually
 
 - [Page Builder](../../docs/page-builder.md) — Full component workflow
 - [Strapi API Client](../../docs/strapi-api-client.md) — Fetching content
-- [Authentication](../../docs/authentication.md) — Better Auth + Strapi JWT
 - [Strapi Types](../../docs/strapi-types-usage.md) — Type utilities

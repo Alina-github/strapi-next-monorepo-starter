@@ -2,7 +2,6 @@ import type { NextRequest } from "next/server"
 import createMiddleware from "next-intl/middleware"
 
 import { routing } from "@/lib/navigation"
-import { authGuard } from "@/lib/proxies/authGuard"
 import { basicAuth } from "@/lib/proxies/basicAuth"
 import { dynamicRewrite } from "@/lib/proxies/dynamicRewrite"
 import { httpsRedirect } from "@/lib/proxies/httpsRedirect"
@@ -17,9 +16,6 @@ export default async function proxy(req: NextRequest) {
   const httpsResponse = httpsRedirect(req)
   if (httpsResponse) return httpsResponse
 
-  const authResponse = await authGuard(req, intlProxy)
-  if (authResponse) return authResponse
-
   const dynamicResponse = dynamicRewrite(req, intlProxy)
   if (dynamicResponse) return dynamicResponse
 
@@ -33,7 +29,7 @@ export const config = {
     "/",
     // Set a cookie to remember the previous locale for
     // all requests that have a locale prefix
-    `/(cs|en)/:path*`,
+    `/(en|pt|ru)/:path*`,
 
     // Skip all paths that should not be internationalized
     // eslint-disable-next-line unicorn/prefer-string-raw

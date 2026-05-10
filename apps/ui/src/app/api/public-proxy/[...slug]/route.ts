@@ -60,7 +60,6 @@ async function handler(
 
   const authHeader = await createStrapiAuthHeader({
     isReadOnly,
-    isPrivate: false,
   })
 
   const response = await fetch(url, {

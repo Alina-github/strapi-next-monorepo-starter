@@ -9,13 +9,6 @@ export interface IntlMessages extends Messages {}
 export interface CustomFetchOptions {
   // do not add locale query params to the request
   doNotAddLocaleQueryParams?: boolean
-  // force JWT token for the request
-  // if omitted, the token will be retrieved from the session
-  // used by PrivateStrapiClient
-  userJWT?: string
-  // omit "Authorization" header from the request (don't retrieve JWT token from session)
-  // used by PrivateStrapiClient
-  omitUserAuthorization?: boolean
   // use proxy for the request (useful for client-side requests)
   useProxy?: boolean
 }

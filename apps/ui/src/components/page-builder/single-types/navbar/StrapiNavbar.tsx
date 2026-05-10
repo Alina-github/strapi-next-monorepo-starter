@@ -1,5 +1,3 @@
-import type { Data } from "@repo/strapi-types"
-import { headers } from "next/headers"
 import Image from "next/image"
 import type { Locale } from "next-intl"
 import { use } from "react"
@@ -8,14 +6,8 @@ import AppLink from "@/components/elementary/AppLink"
 import LocaleSwitcher from "@/components/elementary/LocaleSwitcher"
 import StrapiImageWithLink from "@/components/page-builder/components/utilities/StrapiImageWithLink"
 import StrapiLink from "@/components/page-builder/components/utilities/StrapiLink"
-import { NavbarAuthSection } from "@/components/page-builder/single-types/navbar/NavbarAuthSection"
-import { getSessionSSR } from "@/lib/auth"
 import { fetchNavbar } from "@/lib/strapi-api/content/server"
 import { cn } from "@/lib/styles"
-
-const hardcodedLinks: NonNullable<
-  Data.ContentType<"api::navbar.navbar">["links"]
-> = [{ id: "client-page", href: "/client-page", label: "Client Page" }]
 
 export function StrapiNavbar({ locale }: { readonly locale: Locale }) {
   const response = use(fetchNavbar(locale))
@@ -25,11 +17,7 @@ export function StrapiNavbar({ locale }: { readonly locale: Locale }) {
     return null
   }
 
-  const session = use(getSessionSSR(use(headers())))
-
-  const links = (navbar.links ?? [])
-    .filter((link) => link.href)
-    .concat(...hardcodedLinks)
+  const links = (navbar.links ?? []).filter((link) => link.href)
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-white/90 shadow-sm backdrop-blur transition-colors duration-300">
@@ -65,7 +53,6 @@ export function StrapiNavbar({ locale }: { readonly locale: Locale }) {
           ) : null}
         </div>
 
-        <NavbarAuthSection sessionSSR={session} />
         <LocaleSwitcher locale={locale} />
       </div>
     </header>
