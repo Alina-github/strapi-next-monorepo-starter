@@ -29,7 +29,7 @@ Copy `apps/ui/locales/en.json` to `apps/ui/locales/{locale}.json`.
 
 The file structure must match `en.json` exactly — same keys, translated values. Initially copy as-is and mark values for translation.
 
-Existing locales for reference: `en.json`, `cs.json`.
+Existing locales for reference: `en.json`, `pt.json`, `ru.json`.
 
 ### 2. Update routing config
 
@@ -39,13 +39,14 @@ Add the new locale code to the `locales` array:
 
 ```typescript
 export const routing = defineRouting({
-  locales: ["cs", "en", "{locale}"],
+  // Example after adding e.g. `de`: ["de", "en", "pt", "ru"]
+  locales: ["en", "pt", "ru"],
   defaultLocale: "en",
   localePrefix: "as-needed",
 })
 ```
 
-Keep the array sorted alphabetically.
+Insert the new locale code and keep the array sorted alphabetically (e.g. `de` → `["de", "en", "pt", "ru"]`).
 
 ### 3. Update i18n config (if needed)
 

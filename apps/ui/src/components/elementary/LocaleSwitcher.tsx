@@ -16,9 +16,10 @@ import {
 import { routing, usePathname, useRouter } from "@/lib/navigation"
 
 const localeTranslation = {
-  cs: "Czech",
   en: "English",
-}
+  pt: "Português",
+  ru: "Русский",
+} as const satisfies Record<Locale, string>
 
 function LocaleSwitcher({ locale }: { locale: Locale }) {
   return (

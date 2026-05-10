@@ -87,7 +87,7 @@ Otherwise, you have to create following manually in Strapi admin panel:
 - Create navbar in `Navbar` single type
 - Create footer in `Footer` single type
 
-Because FE supports 2 languages (`en` and `cs`) by default, you have to enable both languages in Strapi (Settings > Internationalization). Then you need to create corresponding content for both languages.
+Because the frontend supports `en`, `pt`, and `ru` by default, enable those locales in Strapi (Settings > Internationalization). Then create corresponding content for each locale you use.
 
 ### 4. Sync configuration
 

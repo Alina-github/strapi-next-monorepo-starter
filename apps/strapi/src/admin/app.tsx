@@ -1,19 +1,18 @@
 import { setPluginConfig } from "@_sh/strapi-plugin-ckeditor"
 import type { StrapiApp } from "@strapi/strapi/admin"
-
-// eslint-disable-next-line import-x/order
-import { cs } from "./cs"
 import "@repo/design-system/styles.css"
 
-// eslint-disable-next-line import-x/order
 import { defaultCkEditorConfig, simpleCkEditorConfig } from "./ckeditor/configs"
 import InternalJobs from "./extensions/InternalJobs"
+import { pt } from "./pt"
+import { ru } from "./ru"
 
 export default {
   config: {
-    locales: ["en", "cs"],
+    locales: ["en", "pt", "ru"],
     translations: {
-      cs,
+      pt,
+      ru,
     },
   },
   async bootstrap(app: StrapiApp) {
@@ -25,7 +24,7 @@ export default {
     const adminPanelConfigEnv = process.env.ADMIN_PANEL_CONFIG_API_AUTH_TOKEN
     if (adminPanelConfigEnv) {
       /**
-       * Fetch admin panel config at runtime (e.g., theme settings)
+       * Fetch admin panel config at runtime (e.g. theme settings)
        * and apply them to the admin panel.
        *
        * This can be used to inject CSS into the admin panel based on runtime env variables.

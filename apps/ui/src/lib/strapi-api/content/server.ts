@@ -111,7 +111,11 @@ export async function fetchNavbar(locale: Locale) {
     return await PublicStrapiClient.fetchOne("api::navbar.navbar", undefined, {
       locale,
       populate: {
-        links: true,
+        links: {
+          populate: {
+            page: { fields: ["fullPath"] },
+          },
+        },
         logoImage: { populate: { image: true, link: true } },
       },
     })
@@ -141,6 +145,71 @@ export async function fetchFooter(locale: Locale) {
   } catch (e: unknown) {
     logNonBlockingError({
       message: `Error fetching footer for locale '${locale}'`,
+      error: {
+        error: e instanceof Error ? e.message : String(e),
+        stack: e instanceof Error ? e.stack : undefined,
+      },
+    })
+  }
+}
+
+// ------ Provider (affiliate comparison)
+
+export async function fetchProviders(
+  locale: Locale,
+  requestInit?: RequestInit,
+  options?: CustomFetchOptions
+) {
+  try {
+    return await PublicStrapiClient.fetchAll(
+      "api::provider.provider",
+      {
+        locale,
+        status: "published",
+        sort: ["featured:desc", "name:asc"],
+        fields: ["name", "slug", "summary", "featured", "minimumInvestmentEUR"],
+        populate: {},
+      },
+      requestInit,
+      options
+    )
+  } catch (e: unknown) {
+    logNonBlockingError({
+      message: `Error fetching providers for locale '${locale}'`,
+      error: {
+        error: e instanceof Error ? e.message : String(e),
+        stack: e instanceof Error ? e.stack : undefined,
+      },
+    })
+
+    return { data: [], meta: { pagination: { total: 0 } } }
+  }
+}
+
+export async function fetchProviderBySlug(
+  slug: string,
+  locale: Locale,
+  requestInit?: RequestInit,
+  options?: CustomFetchOptions
+) {
+  try {
+    return await PublicStrapiClient.fetchOneBySlug(
+      "api::provider.provider",
+      slug,
+      {
+        locale,
+        status: "published",
+        populate: {
+          seo: seoPopulate,
+          localizations: true,
+        },
+      },
+      requestInit,
+      options
+    )
+  } catch (e: unknown) {
+    logNonBlockingError({
+      message: `Error fetching provider '${slug}' for locale '${locale}'`,
       error: {
         error: e instanceof Error ? e.message : String(e),
         stack: e instanceof Error ? e.stack : undefined,

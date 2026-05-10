@@ -44,6 +44,7 @@ This updates `@repo/strapi-types`. Forgetting causes silent type mismatches betw
 - [Authentication](docs/authentication.md) — Better Auth + Strapi JWT integration
 - [Strapi Schemas](docs/strapi-schemas.md) — Schema attributes, localization, lifecycle hooks
 - [Strapi Types](docs/strapi-types-usage.md) — Type utilities and usage patterns
+- [Portugal affiliate MVP](docs/MVP-portugal-affiliate.md) — Provider collection, `/providers` routes, `pt` locale
 
 ## Commits
 
